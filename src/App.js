@@ -1,23 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
+import React,{useCallback, useRef, useState} from 'react'
+import TodoTemplate from './component/TodoTemplate';
+import TodoInsert from './component/TodoInsert';
+import TodoList from './component/TodoList';
 
-function App() {
+const App = () => {
+  const [todos, setTodos] = useState([
+    {
+      id:1,
+      text:'리액트 기초 알아보기',
+      checked:true,
+    },
+    {
+      id:2,
+      text:'리액트 기초 알아보기',
+      checked:true,
+    },
+    {
+      id:3,
+      text:'리액트 기초 알아보기',
+      checked:false,
+    },
+  ])
+
+  //고윳값으로 사용될 id
+  // ref를 사용하여 변수 담기
+
+  const nextId = useRef(4);
+  const onInsert = useCallback(
+    text=> {
+      const todo = {
+        id: nextId.current,
+        text,
+        checked: false,
+      };
+      setTodos(todos.concat(todo));
+      nextId.current += 1;
+    },
+    [todos],
+  );
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <TodoTemplate>
+        <TodoInsert onInsert={onInsert}/>
+        <TodoList todos={todos}/>
+      </TodoTemplate>
     </div>
   );
 }
